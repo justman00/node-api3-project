@@ -1,5 +1,6 @@
 const express = require('express');
 const {validateUserId, validateUser, validatePost} = require('./../middleware/middleware');
+const validatePostId = require('./../middleware/postsMiddleware');
 const userModel = require('./users-model');
 const postModel = require('./../posts/posts-model');
 
@@ -84,6 +85,27 @@ router.post('/:id/posts', validateUserId(), express.json(), validatePost(), (req
     })
   })
 });
+
+router.get('/:id/posts/:id', validatePostId(), (req, res) => {
+  res.status(200).json(req.post);
+})
+
+router.delete('/:id/posts/:id', validatePostId(), (req, res) => {
+    postModel.remove(req.params.id).then((deletedPost) => {
+      return res.status(201).json(deletedPost)
+    }).catch((error) => {
+      return res.status(500).json({msg: 'Something went wrong'})
+    })
+})
+
+router.put('/:id/posts/:id', validatePostId(), express.json(), validatePost(), (req, res) => {
+  postModel.update(req.params.id, req.body).then(() => {
+    return res.status(201).json({
+      id: req.params.id,
+      text: req.body.text
+    })
+ })
+})
 
 // do not forget to export the router
 module.exports = router;
