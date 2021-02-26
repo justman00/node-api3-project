@@ -27,6 +27,13 @@ const validateUserId = () => (req, res, next) => {
 
 const validateUser = () => (req, res, next) => {
   // DO YOUR MAGIC
+  if(!req.body.name || req.body.name === ' ') {
+      return res.status(400).json({
+        msg: 'Please enter the name'
+      })
+  }
+  else
+    return next();
 }
 
 const validatePost = () => (req, res, next) => {

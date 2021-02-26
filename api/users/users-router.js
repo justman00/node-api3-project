@@ -26,9 +26,17 @@ router.get('/:id', validateUserId(), (req, res) => {
      res.status(200).json(req.user);
 });
 
-router.post('/', validateUser(), (req, res) => {
+router.post('/', express.json(), validateUser(), (req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
+  console.log(req.body.name)
+  userModel.insert(req.body).then((addedUser) => {
+    return res.status(201).json(addedUser);
+  }).catch((error) => {
+    return res.status(500).json({
+      msg: 'Something went wrong'
+    })
+  })
 });
 
 router.put('/:id', validateUserId(), validateUser(), (req, res) => {
