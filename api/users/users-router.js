@@ -43,8 +43,11 @@ router.put('/:id', validateUserId(), express.json(), validateUser(), (req, res) 
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
-  userModel.update(req.params.id, req.body).then((editedUser) => {
-     return res.status(201).json(editedUser)
+  userModel.update(req.params.id, req.body).then(() => {
+     return res.status(201).json({
+       id: req.params.id,
+       name: req.body.name
+     })
   }).catch((error) => {
     return res.status(500).json({msg: 'Something went wrong'})
   })
