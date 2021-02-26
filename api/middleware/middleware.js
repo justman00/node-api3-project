@@ -1,3 +1,5 @@
+const usersModel = require('./../users/users-model');
+
 const logger = (req, res, next) => {
   // DO YOUR MAGIC
   const date = new Date().toISOString();
@@ -7,6 +9,20 @@ const logger = (req, res, next) => {
 
 const validateUserId = () => (req, res, next) => {
   // DO YOUR MAGIC
+  usersModel.getById(req.params.id).then((user) => {
+     if(!user) {
+        return res.status(404).json({
+          msg: 'No user found'
+        })
+     }
+
+     req.user = user;
+     next();
+  }).catch((error) => {
+    return res.status(500).json({
+      msg: 'Something went wrong'
+    })
+  })
 }
 
 const validateUser = () => (req, res, next) => {
