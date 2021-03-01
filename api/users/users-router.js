@@ -8,8 +8,12 @@ const posts = require("../posts/posts-model");
 const {
   validateUserId,
   validateUser,
+} = require("../middleware/userMiddleware");
+
+const {
+  validatePostId,
   validatePost,
-} = require("../middleware/middleware");
+} = require("../middleware/postMiddleware");
 
 const router = express.Router();
 
@@ -21,55 +25,138 @@ router.get("/api/users", (req, res, next) => {
     .then((users) => {
       res.status(200).json(users);
     })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+    .catch(next);
 });
 
 // RETURN THE USER OBJECT
 // this needs a middleware to verify user id
 
-router.get("api/users/:id", (req, res) => {
+router.get("api/users/:id", validateUserId(), (req, res, next) => {
+  res.status(200).json(req.user);
+});
+
+// RETURN THE NEWLY CREATED USER OBJECT
+// this needs a middleware to check that the request body is valid
+
+router.post("api/users/", validateUser(), (req, res, next) => {
   users
-    .getById(req.params.id)
-    .then((user) => {
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ msg: "Not found" });
-      }
+    .insert(req.body)
+    .then((newUser) => {
+      res.status(201).json(newUser);
     })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+    .catch(next);
 });
 
-router.post("/", (req, res, next) => {
-  // RETURN THE NEWLY CREATED USER OBJECT
-  // this needs a middleware to check that the request body is valid
+// RETURN THE FRESHLY UPDATED USER OBJECT
+// this needs a middleware to verify user id
+// and another middleware to check that the request body is valid
+
+router.put(
+  "api/users/:id",
+  validateUser(),
+  validateUserId(),
+  (req, res, next) => {
+    users
+      .update(req.params.id, req.body)
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
+      })
+      .catch(next);
+  }
+);
+
+// RETURN THE FRESHLY DELETED USER OBJECT
+// this needs a middleware to verify user id
+
+router.delete("api/users/:id", validateUserId(), (req, res, next) => {
+  users
+    .remove(req.params.id)
+    .then((deletedUser) => {
+      res.status(200).json(deletedUser);
+    })
+    .catch(next);
 });
 
-router.put("/:id", (req, res, next) => {
-  // RETURN THE FRESHLY UPDATED USER OBJECT
-  // this needs a middleware to verify user id
-  // and another middleware to check that the request body is valid
+// RETURN THE ARRAY OF USER POSTS
+// this needs a middleware to verify user id
+
+router.get("api/users/:id/posts", validateUserId(), (req, res, next) => {
+  users
+    .getUserPosts(req.params.id)
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch(next);
 });
 
-router.delete("/:id", (req, res, next) => {
-  // RETURN THE FRESHLY DELETED USER OBJECT
-  // this needs a middleware to verify user id
-});
+// RETURN THE NEWLY CREATED USER POST
+// this needs a middleware to verify user id
+// and another middleware to check that the request body is valid
 
-router.get("/:id/posts", (req, res, next) => {
-  // RETURN THE ARRAY OF USER POSTS
-  // this needs a middleware to verify user id
-});
+router.post(
+  "api/users/:id/posts",
+  validateUserId(),
+  validatePost(),
+  (req, res, next) => {
+    posts
+      .insert(req.params.id, req.body)
+      .then((newPost) => {
+        res.status(201).json(newPost);
+      })
+      .catch(next);
+  }
+);
 
-router.post("/:id/posts", (req, res, next) => {
-  // RETURN THE NEWLY CREATED USER POST
-  // this needs a middleware to verify user id
-  // and another middleware to check that the request body is valid
-});
+// RETURN THE POST OBJECT
+// this needs a middleware to verify user id
+// this needs a middleware to verify post id
+
+router.get(
+  "api/users/:id/posts/:postId",
+  validateUserId(),
+  validatePostId(),
+  (req, res, next) => {
+    res.status(200).json(req.post);
+  }
+);
+
+// RETURN THE FRESHLY UPDATED POST OBJECT
+// this needs a middleware to verify user id
+// this needs a middleware to verify that the request body is valid
+// and another middleware to verify post id
+
+router.put(
+  "api/users/:id/posts/:postId",
+  validateUserId(),
+  validatePost(),
+  validatePostId(),
+  (req, res, next) => {
+    posts
+      .update(req.params.id, req.body)
+      .then((updatedPost) => {
+        res.status(200).json(updatedPost);
+      })
+      .catch(next);
+  }
+);
+
+// RETURN THE FRESHLY DELETED POST OBJECT
+// this needs a middleware to verify user id
+// this needs a middleware to verify post id
+
+router.delete(
+  "api/users/:id/posts/:postId",
+  validateUserId(),
+  validatePostId(),
+  (req, res, next) => {
+    posts
+      .remove(req.params.id)
+      .then((deletedPost) => {
+        res.status(200).json(deletedPost);
+      })
+      .catch(next);
+  }
+);
 
 // do not forget to export the router
 module.exports = router;
