@@ -19,7 +19,7 @@ const router = express.Router();
 
 // RETURN AN ARRAY WITH ALL THE USERS
 
-router.get("/api/users", (req, res, next) => {
+router.get("/", (req, res, next) => {
   users
     .get()
     .then((users) => {
@@ -31,14 +31,14 @@ router.get("/api/users", (req, res, next) => {
 // RETURN THE USER OBJECT
 // this needs a middleware to verify user id
 
-router.get("api/users/:id", validateUserId(), (req, res, next) => {
+router.get("/:id", validateUserId(), (req, res, next) => {
   res.status(200).json(req.user);
 });
 
 // RETURN THE NEWLY CREATED USER OBJECT
 // this needs a middleware to check that the request body is valid
 
-router.post("api/users/", validateUser(), (req, res, next) => {
+router.post("/", validateUser(), (req, res, next) => {
   users
     .insert(req.body)
     .then((newUser) => {
@@ -52,7 +52,7 @@ router.post("api/users/", validateUser(), (req, res, next) => {
 // and another middleware to check that the request body is valid
 
 router.put(
-  "api/users/:id",
+  "/:id",
   validateUser(),
   validateUserId(),
   (req, res, next) => {
@@ -68,7 +68,7 @@ router.put(
 // RETURN THE FRESHLY DELETED USER OBJECT
 // this needs a middleware to verify user id
 
-router.delete("api/users/:id", validateUserId(), (req, res, next) => {
+router.delete("/:id", validateUserId(), (req, res, next) => {
   users
     .remove(req.params.id)
     .then((deletedUser) => {
@@ -80,7 +80,7 @@ router.delete("api/users/:id", validateUserId(), (req, res, next) => {
 // RETURN THE ARRAY OF USER POSTS
 // this needs a middleware to verify user id
 
-router.get("api/users/:id/posts", validateUserId(), (req, res, next) => {
+router.get("/:id/posts", validateUserId(), (req, res, next) => {
   users
     .getUserPosts(req.params.id)
     .then((posts) => {
@@ -94,7 +94,7 @@ router.get("api/users/:id/posts", validateUserId(), (req, res, next) => {
 // and another middleware to check that the request body is valid
 
 router.post(
-  "api/users/:id/posts",
+  "/:id/posts",
   validateUserId(),
   validatePost(),
   (req, res, next) => {
@@ -112,7 +112,7 @@ router.post(
 // this needs a middleware to verify post id
 
 router.get(
-  "api/users/:id/posts/:postId",
+  "/:id/posts/:postId",
   validateUserId(),
   validatePostId(),
   (req, res, next) => {
@@ -126,7 +126,7 @@ router.get(
 // and another middleware to verify post id
 
 router.put(
-  "api/users/:id/posts/:postId",
+  "/:id/posts/:postId",
   validateUserId(),
   validatePost(),
   validatePostId(),
@@ -145,7 +145,7 @@ router.put(
 // this needs a middleware to verify post id
 
 router.delete(
-  "api/users/:id/posts/:postId",
+  "/:id/posts/:postId",
   validateUserId(),
   validatePostId(),
   (req, res, next) => {

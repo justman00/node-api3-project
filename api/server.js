@@ -5,13 +5,13 @@ const express = require("express");
 const logger = require("./middleware/loggerMiddleware");
 const error = require("./middleware/errorMiddleware");
 const usersRouter = require("./users/users-router");
-
+const postsRouter = require("./posts/posts-router");
 const server = express();
 
 server.use(logger("combined"));
 server.use(express.json());
-server.use(usersRouter);
-
+server.use("/api/users", usersRouter);
+server.use(postsRouter);
 server.use(error);
 
 module.exports = server;
