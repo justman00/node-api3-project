@@ -11,7 +11,7 @@ const server = express();
 server.use(logger("combined"));
 server.use(express.json());
 server.use("/api/users", usersRouter);
-server.use(postsRouter);
+server.use("/api/posts", postsRouter);
 server.use(error);
 
 module.exports = server;

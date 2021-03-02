@@ -8,7 +8,7 @@ const router = express.Router();
 
 // RETURN AN ARRAY WITH ALL THE POSTS
 
-router.get("/", (req, res, next) => {
+router.get("/api/posts", (req, res, next) => {
   posts
     .get()
     .then((posts) => {
@@ -20,7 +20,7 @@ router.get("/", (req, res, next) => {
 // RETURN THE POST OBJECT
 // this needs a middleware to verify post id
 
-router.get("/:postId", validatePostId(), (req, res, next) => {
+router.get("/api/posts/:id", validatePostId(), (req, res, next) => {
   res.status(200).json(req.post);
 });
 

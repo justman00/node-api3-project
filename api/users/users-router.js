@@ -99,7 +99,7 @@ router.post(
   validatePost(),
   (req, res, next) => {
     posts
-      .insert(req.params.id, req.body)
+      .insert(req.body)
       .then((newPost) => {
         res.status(201).json(newPost);
       })
@@ -115,7 +115,7 @@ router.get(
   "/:id/posts/:postId",
   validateUserId(),
   validatePostId(),
-  (req, res, next) => {
+  (req, res) => {
     res.status(200).json(req.post);
   }
 );
