@@ -20,6 +20,8 @@ router.get("/api/posts", (req, res, next) => {
 // RETURN THE POST OBJECT
 // this needs a middleware to verify post id
 
-router.get("api/posts/:postId", validatePostId(), (req, res, next) => {
+router.get("/api/posts/:id", validatePostId(), (req, res, next) => {
   res.status(200).json(req.post);
 });
+
+module.exports= router;
