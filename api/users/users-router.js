@@ -111,7 +111,6 @@ router.get(
   validateUserId(),
   validatePostId(),
   (req, res) => {
-    console.log("request: ", req);
     res.status(200).json(req.post);
   }
 );
