@@ -2,7 +2,7 @@
   "name": "node-api3-project",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve -s build ",
+    "start": "node index.js ",
     "server": "nodemon index.js",
     "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand --silent"
   },
@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "knex": "^0.21.18",
+    "mongoose": "^5.11.18",
     "npm-watch": "^0.7.0",
     "serve": "^11.3.2",
     "sqlite3": "^5.0.2"

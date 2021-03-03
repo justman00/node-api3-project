@@ -1,8 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-// remember express by default cannot parse JSON in request bodies
+const mongoose = require("mongoose");
 
-// global middlewares and the user's router need to be connected here
+console.log(process.env.MONGO_DB_USERNAME, process.env.MONGO_DB_PASSWORD);
+mongoose.connect(
+  `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.v8xqd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+);
+
 const logger = require("./middleware/loggerMiddleware");
 const error = require("./middleware/errorMiddleware");
 const welcomeRouter = require("./welcome/welcome-router");
