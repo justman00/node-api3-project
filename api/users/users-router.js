@@ -51,19 +51,14 @@ router.post("/", validateUser(), (req, res, next) => {
 // this needs a middleware to verify user id
 // and another middleware to check that the request body is valid
 
-router.put(
-  "/:id",
-  validateUser(),
-  validateUserId(),
-  (req, res, next) => {
-    users
-      .update(req.params.id, req.body)
-      .then((updatedUser) => {
-        res.status(200).json(updatedUser);
-      })
-      .catch(next);
-  }
-);
+router.put("/:id", validateUser(), validateUserId(), (req, res, next) => {
+  users
+    .update(req.params.id, req.body)
+    .then((updatedUser) => {
+      res.status(200).json(updatedUser);
+    })
+    .catch(next);
+});
 
 // RETURN THE FRESHLY DELETED USER OBJECT
 // this needs a middleware to verify user id
@@ -116,6 +111,7 @@ router.get(
   validateUserId(),
   validatePostId(),
   (req, res) => {
+    console.log("request: ", req);
     res.status(200).json(req.post);
   }
 );

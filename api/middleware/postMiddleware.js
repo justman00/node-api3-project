@@ -3,7 +3,7 @@ const posts = require("../posts/posts-model");
 function validatePostId() {
   return (req, res, next) => {
     posts
-      .getById(req.params.id)
+      .getById(req.params.postId)
       .then((post) => {
         if (!post) {
           return res.status(404).json({ msg: "Post Not Found!" });
