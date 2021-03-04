@@ -9,14 +9,14 @@ mongoose.connect(
 
 const logger = require("./middleware/loggerMiddleware");
 const error = require("./middleware/errorMiddleware");
-const welcomeRouter = require("./welcome/welcome-router");
+//const welcomeRouter = require("./welcome/welcome-router");
 const usersRouter = require("./users/users-router");
 const postsRouter = require("./posts/posts-router");
 const server = express();
 
 server.use(logger("combined"));
 server.use(express.json());
-server.use(welcomeRouter);
+//server.use(welcomeRouter);
 server.use("/api/users", usersRouter);
 server.use("/api/posts", postsRouter);
 server.use(error);
