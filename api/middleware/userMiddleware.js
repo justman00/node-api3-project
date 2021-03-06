@@ -1,8 +1,9 @@
 const users = require("../users/users-model");
+const mongoUsers = require("../users/users-mongo-model");
 
 function validateUserId() {
   return (req, res, next) => {
-    users
+    mongoUsers
       .getById(req.params.id)
       .then((user) => {
         if (!user) {

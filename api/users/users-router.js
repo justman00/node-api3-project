@@ -4,6 +4,7 @@ const express = require("express");
 // The middleware functions also need to be required
 
 const users = require("./users-model");
+const mongoUsers = require("./users-mongo-model");
 const posts = require("../posts/posts-model");
 const {
   validateUserId,
@@ -20,7 +21,7 @@ const router = express.Router();
 // RETURN AN ARRAY WITH ALL THE USERS
 
 router.get("/", (req, res, next) => {
-  users
+  mongoUsers
     .get()
     .then((users) => {
       res.status(200).json(users);
@@ -38,8 +39,8 @@ router.get("/:id", validateUserId(), (req, res, next) => {
 // RETURN THE NEWLY CREATED USER OBJECT
 // this needs a middleware to check that the request body is valid
 
-router.post("/", validateUser(), (req, res, next) => {
-  users
+router.post("/", (req, res, next) => {
+  mongoUsers
     .insert(req.body)
     .then((newUser) => {
       res.status(201).json(newUser);
@@ -52,7 +53,7 @@ router.post("/", validateUser(), (req, res, next) => {
 // and another middleware to check that the request body is valid
 
 router.put("/:id", validateUser(), validateUserId(), (req, res, next) => {
-  users
+  mongoUsers
     .update(req.params.id, req.body)
     .then((updatedUser) => {
       res.status(200).json(updatedUser);
@@ -64,7 +65,7 @@ router.put("/:id", validateUser(), validateUserId(), (req, res, next) => {
 // this needs a middleware to verify user id
 
 router.delete("/:id", validateUserId(), (req, res, next) => {
-  users
+  mongoUsers
     .remove(req.params.id)
     .then((deletedUser) => {
       res.status(200).json(deletedUser);
@@ -76,7 +77,7 @@ router.delete("/:id", validateUserId(), (req, res, next) => {
 // this needs a middleware to verify user id
 
 router.get("/:id/posts", validateUserId(), (req, res, next) => {
-  users
+  mongoUsers
     .getUserPosts(req.params.id)
     .then((posts) => {
       res.status(200).json(posts);
