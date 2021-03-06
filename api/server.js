@@ -16,18 +16,20 @@ const connectDB = async () => {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-connectDB();
+connectDB().then(() => {
+  const { logger } = require("./middleware/middleware");
 
-const { logger } = require("./middleware/middleware");
+  const usersRouter = require("./users/users-router");
+  const postsRouter = require("./posts/posts-router");
+  
+  const server = express();
+  server.use(cors());
+  
+  server.use(logger);
+  server.use("/api/users", usersRouter);
+  server.use("/api/posts", postsRouter);
+})
 
-const usersRouter = require("./users/users-router");
-const postsRouter = require("./posts/posts-router");
 
-const server = express();
-server.use(cors());
-
-server.use(logger);
-server.use("/api/users", usersRouter);
-server.use("/api/posts", postsRouter);
 
 module.exports = server;
