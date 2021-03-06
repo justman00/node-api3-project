@@ -21,7 +21,7 @@ const get = () => {
 };
 
 const getById = (userId) => {
-  return Users.findById(userId).populate('posts.type').exec();
+  return Users.findById(userId).exec();
 };
 
 const insertUser = (user) => {

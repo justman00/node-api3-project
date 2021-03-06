@@ -24,7 +24,19 @@ const getByUser = (userId) => {
 }
 
 const getById = (postId) => {
-  return Posts.findById(postId).exec();
+  return Posts.findOne({_id: postId}).exec();
 }
 
-module.exports = {insert, getByUser, getById, Posts}
+const getAllPosts = () => {
+  return Posts.find().exec();
+}
+
+const remove = (userId, postId) => {
+  return Posts.findByIdAndDelete(postId).where({user_id: userId}).exec();
+}
+
+const update = (postId, newPost) => {
+  return Posts.findByIdAndUpdate(postId, newPost).exec();
+}
+
+module.exports = {insert, getByUser, getById, getAllPosts, remove, update, Posts}

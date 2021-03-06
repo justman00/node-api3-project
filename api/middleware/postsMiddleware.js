@@ -18,4 +18,15 @@ const validatePostId = () => (req, res, next) => {
     })
 }
 
-module.exports = validatePostId;
+const validatePost = () => (req, res, next) => {
+    // DO YOUR MAGIC
+    if(!req.body.text) {
+      return res.status(400).json({
+        msg: 'missing required text field'
+      })
+  }
+  else
+    return next();
+  }
+
+module.exports = {validatePostId, validatePost};

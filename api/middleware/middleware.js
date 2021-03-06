@@ -36,21 +36,9 @@ const validateUser = () => (req, res, next) => {
     return next();
 }
 
-const validatePost = () => (req, res, next) => {
-  // DO YOUR MAGIC
-  if(!req.body.text) {
-    return res.status(400).json({
-      msg: 'missing required text field'
-    })
-}
-else
-  return next();
-}
-
 // do not forget to expose these functions to other modules
 module.exports = {
   logger,
   validateUserId,
-  validateUser,
-  validatePost
+  validateUser
 }
