@@ -16,7 +16,7 @@ const connectDB = async () => {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-await connectDB();
+connectDB();
 
 const { logger } = require("./middleware/middleware");
 
