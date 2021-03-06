@@ -8,10 +8,10 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   userModel.get().then((users) => {
-    res.status(200).json(users)
+    return res.status(200).json(users)
   }).catch((error) => {
     console.log('Error ',error)
-    res.status(500).json({
+    return res.status(500).json({
       msg: 'Something went wrong'
     })
   })
