@@ -1,47 +1,46 @@
-const db = require('../../data/db-config');
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+
+const userSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    }
+  ]
+});
+
+const Users = mongoose.model("Users", userSchema);
+
+const get = () => {
+  return Users.find().exec();
+};
+
+const getById = (userId) => {
+  return Users.findById(userId).populate('posts.type').exec();
+};
+
+const insertUser = (user) => {
+  const userToAdd = new Users(user);
+  return userToAdd.save();
+};
+
+const updateUser = (id, change) => {
+  return Users.findByIdAndUpdate(id, change).exec();
+};
+
+const removeUser = (id) => {
+  return Users.findByIdAndDelete(id).exec();
+};
 
 module.exports = {
   get,
   getById,
-  getUserPosts,
-  insert,
-  update,
-  remove,
+  insertUser,
+  updateUser,
+  removeUser
 };
-
-function get() {
-  return db('users');
-}
-
-function getById(id) {
-  return db('users')
-    .where({ id })
-    .first();
-}
-
-function getUserPosts(userId) {
-  return db('posts as p')
-    .join('users as u', 'u.id', 'p.user_id')
-    .select('p.id', 'p.text', 'u.name as postedBy')
-    .where('p.user_id', userId);
-}
-
-function insert(user) {
-  return db('users')
-    .insert(user)
-    .then(ids => {
-      return getById(ids[0]);
-    });
-}
-
-function update(id, changes) {
-  return db('users')
-    .where({ id })
-    .update(changes);
-}
-
-function remove(id) {
-  return db('users')
-    .where('id', id)
-    .del();
-}
