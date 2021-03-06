@@ -6,6 +6,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  
+    capped: { size: 1024 },
+    bufferCommands: false,
+    autoCreate: false, // disable `autoCreate` since `bufferCommands` is false
+  
   posts: [
     {
       type: Schema.Types.ObjectId,
@@ -15,6 +20,7 @@ const userSchema = new Schema({
 });
 
 const Users = mongoose.model("Users", userSchema);
+await Users.createCollection();
 
 const get = () => {
   return Users.find().exec();
