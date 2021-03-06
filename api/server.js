@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.7j4py.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
 
@@ -11,6 +12,7 @@ const usersRouter = require('./users/users-router');
 const postsRouter = require('./posts/posts-router');
 
 const server = express();
+server.use(cors());
 
 server.use(logger);
 server.use('/api/users', usersRouter);
