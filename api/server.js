@@ -4,20 +4,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const { logger } = require('./middleware/middleware');
-const usersRouter = require('./users/users-router');
-const postsRouter = require('./posts/posts-router');
-
-mongoose.Promise = global.Promise;
-
 const connectDB = async () => {
   try {
     await mongoose.connect(
       `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.cbszf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
       {
         useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
         useUnifiedTopology: true,
       }
     );
@@ -27,6 +19,10 @@ const connectDB = async () => {
   }
 };
 connectDB();
+
+const { logger } = require('./middleware/middleware');
+const usersRouter = require('./users/users-router');
+const postsRouter = require('./posts/posts-router');
 
 const server = express();
 server.use(cors());
