@@ -1,39 +1,42 @@
-const db = require('../../data/db-config');
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
-module.exports = {
-  get,
-  getById,
-  insert,
-  update,
-  remove,
-};
+const postSchema = new Schema({
+  text: {
+    type: String,
+    required: true
+  },
+  user_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Users'
+  }
+})
 
-function get() {
-  return db('posts');
+const Posts = mongoose.model('Posts', postSchema);
+
+const insert = (post) => {
+  const newPost = new Posts(post);
+  return newPost.save();
 }
 
-function getById(id) {
-  return db('posts')
-    .where({ id })
-    .first();
+const getByUser = (userId) => {
+  return Posts.find({user_id: userId}).exec();
 }
 
-function insert(post) {
-  return db('posts')
-    .insert(post)
-    .then(ids => {
-      return getById(ids[0]);
-    });
+const getById = (postId) => {
+  return Posts.findOne({_id: postId}).exec();
 }
 
-function update(id, changes) {
-  return db('posts')
-    .where({ id })
-    .update(changes);
+const getAllPosts = () => {
+  return Posts.find().exec();
 }
 
-function remove(id) {
-  return db('posts')
-    .where('id', id)
-    .del();
+const remove = (userId, postId) => {
+  return Posts.findByIdAndDelete(postId).where({user_id: userId}).exec();
 }
+
+const update = (postId, newPost) => {
+  return Posts.findByIdAndUpdate(postId, newPost).exec();
+}
+
+module.exports = {insert, getByUser, getById, getAllPosts, remove, update, Posts}
