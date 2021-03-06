@@ -16,8 +16,9 @@ const connectDB = async () => {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-connectDB().then(() => {
-  const { logger } = require("./middleware/middleware");
+connectDB();
+
+const { logger } = require("./middleware/middleware");
 
   const usersRouter = require("./users/users-router");
   const postsRouter = require("./posts/posts-router");
@@ -28,7 +29,6 @@ connectDB().then(() => {
   server.use(logger);
   server.use("/api/users", usersRouter);
   server.use("/api/posts", postsRouter);
-})
 
 
 
