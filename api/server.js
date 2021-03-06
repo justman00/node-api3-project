@@ -6,8 +6,7 @@ const cors = require("cors");
 
 const connectDB = async () => {
   try {
-    await connectDB();
-    await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.7j4py.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
+    await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.cbszf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -16,7 +15,7 @@ const connectDB = async () => {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-//connectDB();
+connectDB();
 
 const { logger } = require("./middleware/middleware");
 
