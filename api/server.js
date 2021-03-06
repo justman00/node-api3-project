@@ -11,13 +11,12 @@ const connectDB = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true
     });
-    await mongoose.connection.close();
     console.log("MongoDB connected!!");
   } catch (err) {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-connectDB();
+await connectDB();
 
 const { logger } = require("./middleware/middleware");
 
