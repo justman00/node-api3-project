@@ -5,10 +5,11 @@ console.log(process.env.NODE_ENV);
 console.log(process.env.MONGO_DB_USERNAME, process.env.MONGO_DB_PASSWORD);
 
 mongoose.connect(
-  `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.v8xqd.mongodb.net/Blog?retryWrites=true&w=majority, {
+  `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.v8xqd.mongodb.net/Blog?retryWrites=true&w=majority`,
+  {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-   }`
+  }
 );
 
 const logger = require("./middleware/loggerMiddleware");
