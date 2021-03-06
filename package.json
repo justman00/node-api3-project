@@ -15,8 +15,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "knex": "^0.21.18",
-        "mongoose": "^5.11.18",
-        "sqlite3": "^5.0.2"
+        "mongoose": "^5.11.19"
     },
     "devDependencies": {
         "@types/jest": "^26.0.20",

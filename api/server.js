@@ -6,17 +6,17 @@ const cors = require("cors");
 
 const connectDB = async () => {
   try {
-    await connectDB();
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.7j4py.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useCreateIndex: true
     });
     console.log("MongoDB connected!!");
   } catch (err) {
     console.log("Failed to connect to MongoDB", err);
   }
 };
-//connectDB();
+connectDB();
 
 const { logger } = require("./middleware/middleware");
 

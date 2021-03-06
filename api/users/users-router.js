@@ -10,7 +10,6 @@ router.get('/', (req, res) => {
   userModel.get().then((users) => {
     return res.status(200).json(users)
   }).catch((error) => {
-    console.log('Error ',error)
     return res.status(500).json({
       msg: 'Something went wrong'
     })
