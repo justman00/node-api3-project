@@ -4,6 +4,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+mongoose.set('bufferCommands', false);
+
 const connectDB = async () => {
   try {
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.7j4py.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
