@@ -9,7 +9,8 @@ mongoose.Promise = global.Promise;
 const connectDB = async () => {
   try {
     await mongoose.connect(`mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0-shard-00-00.7j4py.mongodb.net:27017,cluster0-shard-00-01.7j4py.mongodb.net:27017,cluster0-shard-00-02.7j4py.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-il7y58-shard-0&authSource=admin&retryWrites=true&w=majority`, {
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
     console.log("MongoDB connected!!");
   } catch (err) {
