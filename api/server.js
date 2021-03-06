@@ -1,7 +1,7 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-
+console.log(process.env.NODE_ENV);
 console.log(process.env.MONGO_DB_USERNAME, process.env.MONGO_DB_PASSWORD);
 // mongoose.connect(
 //   `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@stepit-cluster.v8xqd.mongodb.net/Blog?retryWrites=true&w=majority`
