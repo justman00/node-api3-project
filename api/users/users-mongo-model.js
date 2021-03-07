@@ -46,5 +46,4 @@ module.exports = {
   update,
   getUserPosts,
   getUserPost,
-  User,
 };

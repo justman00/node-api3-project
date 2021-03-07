@@ -1,5 +1,4 @@
 const express = require("express");
-const { User } = require("./users-model");
 const { Post } = require("../posts/posts-mongo-model");
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
@@ -77,6 +76,8 @@ router.delete("/:id", validateUserId(), (req, res, next) => {
 // RETURN THE ARRAY OF POSTS
 // this needs a middleware to verify user id
 
+//it seems like a validation for empty postsArray could be added if(posts.length==0){msg:"You didn't post anything yet."}
+
 router.get("/:id/posts", validateUserId(), (req, res, next) => {
   mongoUsers
     .getUserPosts(req.params.id)
@@ -90,14 +91,19 @@ router.get("/:id/posts", validateUserId(), (req, res, next) => {
 // this needs a middleware to verify user id
 // this needs a middleware to verify post id
 
-router.get("/:id/posts/:postId", validateUserId(), (req, res, next) => {
-  mongoUsers
-    .getUserPost(req.params.id, req.params.postId)
-    .then((post) => {
-      res.status(200).json(post);
-    })
-    .catch(next);
-});
+router.get(
+  "/:id/posts/:postId",
+  validateUserId(),
+  validatePostId(),
+  (req, res, next) => {
+    mongoUsers
+      .getUserPost(req.params.id, req.params.postId)
+      .then((post) => {
+        res.status(200).json(post);
+      })
+      .catch(next);
+  }
+);
 
 // RETURN THE FRESHLY UPDATED POST OBJECT
 // this needs a middleware to verify user id
@@ -108,25 +114,46 @@ router.put(
   "/:id/posts/:postId",
   validateUserId(),
   validatePost(),
+  validatePostId(),
   async (req, res, next) => {
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
       req.body
     ).exec();
-    res.json({ updatedPost });
+    res.status(200).json(updatedPost);
   }
 );
 
 // RETURN THE FRESHLY DELETED POST OBJECT
+// this needs a middleware to verify user id
 // this needs a middleware to verify post id
 
-// router.delete("/:postId", validatePostId(), (req, res, next) => {
-//   mongoPosts
-//     .remove(req.params.postId)
-//     .then((deletedPost) => {
-//       res.status(200).json(deletedPost);
-//     })
-//     .catch(next);
-// });
+router.delete(
+  "/:id/posts/:postId",
+  validateUserId(),
+  validatePostId(),
+  async (req, res, next) => {
+    const deletedPost = await Post.findByIdAndDelete(req.params.postId).exec();
+    res.status(200).json(deletedPost);
+  }
+);
+
+// RETURN THE NEWLY CREATED POST OBJECT
+// this needs a middleware to verify user id
+// this needs a middleware to check that the request body is valid
+
+router.post(
+  "/:id/posts",
+  validateUserId(),
+  validatePost(),
+  async (req, res, next) => {
+    const newPost = await new Post({
+      ...req.body,
+      user: req.params.id,
+    }).save();
+    res.status(201).json(newPost);
+  }
+);
+
 // do not forget to export the router
 module.exports = router;
