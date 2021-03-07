@@ -1,8 +1,9 @@
 const posts = require("../posts/posts-model");
+const mongoPosts = require("../posts/posts-mongo-model");
 
 function validatePostId() {
   return (req, res, next) => {
-    posts
+    mongoPosts
       .getById(req.params.postId)
       .then((post) => {
         if (!post) {
