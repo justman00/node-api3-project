@@ -1,7 +1,7 @@
 const express = require('express');
 const  User  = require('./users-model');
-const mongoose = require('mongoose');
-const { validateUser} = require('../middleware/middleware');
+const Posts = require('../posts/posts-model')
+const { validateUser,validateUserId,validatePost} = require('../middleware/middleware');
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
 
@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id',validateUserId, (req, res,next) => {
   // RETURN THE USER OBJECT
   // this needs a middleware to verify user id
   User.findById(req.params.id)
@@ -38,7 +38,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/',/* validateUser(), */ (req, res,next) => {
+router.post('/', validateUser,  (req, res,next) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
  
@@ -55,7 +55,7 @@ router.post('/',/* validateUser(), */ (req, res,next) => {
     
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id',validateUserId,validateUser, (req, res,next) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
@@ -70,7 +70,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id',validateUserId, (req, res,next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
   User.remove(req.params.id)
@@ -83,15 +83,51 @@ router.delete('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/:postId/posts',validateUserId,async (req, res,next) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
+  const foundUser = await User.findById( req.params.id ).exec().catch((err) => {
+    res.status(500).json({ message: err });
+  });
+  const posts = await Posts.find(
+    { user_id: req.params.id ,_id: req.params.postId }
+  ).exec().catch((err) => {
+    res.status(500).json({ message: err });
+  });
+
+  res.json({ foundUser, posts });
 });
 
-router.post('/:id/posts', (req, res) => {
+
+/* router.get('/:id/posts',async (req, res,next) => {
+  Posts.findById(req.params.id)
+  .then((post) => {
+    if (post) {
+      res.status(200).json({ post });
+    } else {
+      res.status(404).json({ message: 'Post not found' });
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    res.status(500).json({
+      message: 'Error retrieving the Post',
+    });
+  });
+}); */
+
+router.post('/:id/posts',validatePost,validateUserId,async  (req, res,next) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  const addedPost = await new Posts({
+    ...req.body,
+    user_id: req.params.userId,
+  }).save().catch((err) => {
+    res.status(500).json({ message: err });
+  });
+
+  res.json(addedPost);
 });
 
 // do not forget to export the router

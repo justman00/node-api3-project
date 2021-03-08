@@ -1,6 +1,6 @@
 const users = require('../users/users-model');
 
-function logger(req, res, next) {
+const logger= () =>(req, res, next) => {
   // DO YOUR MAGIC
   const date = new Date().toISOString();
   if(type === 'small'){
@@ -44,6 +44,13 @@ function validateUser(req, res, next) {
 
 function validatePost(req, res, next) {
   // DO YOUR MAGIC
+  if (!req.body.text ) {
+    return res.status(400).json({
+      message: 'Missing user post',
+    });
+  } else {
+      return next();
+  }
 }
 
 // do not forget to expose these functions to other modules
@@ -51,5 +58,6 @@ function validatePost(req, res, next) {
 module.exports = {
   validateUser,
   logger,
-  validateUserId
+  validateUserId,
+  validatePost
 };
