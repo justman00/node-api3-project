@@ -86,7 +86,7 @@ router.delete('/:id',validateUserId, (req, res,next) => {
 router.get('/:id/:postId/posts',validateUserId,async (req, res,next) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
-  const foundUser = await User.findById( req.params.id ).exec().catch((err) => {
+  const foundUser = await User.findById( req.params.id ).catch((err) => {
     res.status(500).json({ message: err });
   });
   const posts = await Posts.find(
@@ -94,12 +94,12 @@ router.get('/:id/:postId/posts',validateUserId,async (req, res,next) => {
   ).exec().catch((err) => {
     res.status(500).json({ message: err });
   });
-
+  console.log("hello")
   res.json({ foundUser, posts });
 });
 
 
-/* router.get('/:id/posts',async (req, res,next) => {
+router.get('/:id/posts',async (req, res,next) => {
   Posts.findById(req.params.id)
   .then((post) => {
     if (post) {
@@ -114,7 +114,7 @@ router.get('/:id/:postId/posts',validateUserId,async (req, res,next) => {
       message: 'Error retrieving the Post',
     });
   });
-}); */
+});
 
 router.post('/:id/posts',validatePost,validateUserId,async  (req, res,next) => {
   // RETURN THE NEWLY CREATED USER POST
