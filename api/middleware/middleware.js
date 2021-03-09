@@ -1,6 +1,7 @@
-const users = require("../users/users-model");
+// const users = require("../users/users-model");
+const Users = require("../users/user-model-mongo");
 
-function logger(req, res, next) {
+const logger = (req, res, next) => {
   // DO YOUR MAGIC
   const date = new Date().toISOString();
   const userAgent = req.headers["user-agent"];
@@ -8,35 +9,50 @@ function logger(req, res, next) {
     `Date = ${date} | path = ${req.path} | ip = ${req.ip} | client = ${userAgent} | method = ${req.method}`
   );
   next();
-}
+};
 
-function validateUserId(req, res, next) {
+const error = (err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({
+    message: "Something went wrong. Please try again",
+  });
+};
+
+const validateUserId = async (req, res, next) => {
   // DO YOUR MAGIC
-  users.getById(req.params.id).then((user) => {
+  // users.getById({ userId: req.params.id }).then((user) => {
+  //   if (!user) {
+  //     return res.status(400).json({ message: "Not found user" });
+  //   }
+  //   req.user = user;
+  //   next();
+  // });
+
+  Users.findById(req.params.id).then((user) => {
     if (!user) {
       return res.status(400).json({ message: "Not found user" });
     }
     req.user = user;
     next();
   });
-}
+};
 
-function validateUser(req, res, next) {
+const validateUser = async (req, res, next) => {
   // DO YOUR MAGIC
   if (!req.body.name || !req.body.email) {
     return res.status(400).json({ message: "Missing name and email " });
   }
   next();
-}
+};
 
-function validatePost(req, res, next) {
+const validatePost = async (req, res, next) => {
   // DO YOUR MAGIC
   if (!req.body.text) {
     return res.status(400).json({ message: "Missing text" });
   }
 
   next();
-}
+};
 
 // do not forget to expose these functions to other modules
 module.exports = {
@@ -44,4 +60,5 @@ module.exports = {
   validateUserId,
   validateUser,
   validatePost,
+  error,
 };
